@@ -13,27 +13,29 @@ public class Client {
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         // 获取client的输出流，用来发送给服务端的数据
         PrintStream out =  new PrintStream(client.getOutputStream());
-        try {
-            // 从服务器接收数据
-            String res = in.readLine();
-            System.out.println(res);
-        } catch (SocketTimeoutException e) {
-            System.out.println("Time out, no response");
+        while (true) {
+            // 读取一行键盘输入
+            String str = input.readLine();
+            // 第一条命令: /login user_name 或者 /quit
+            if (str.startsWith("/login ")) {
+                // 传送给服务端
+                out.print(str);
+            } else if (str.equals("/quit")) {
+                // 关闭键盘输入和客户端Socket
+                input.close();
+                client.close();
+            } else {
+                System.out.println("Invalid Command");
+            }
+            try {
+                // 从服务器接收数据
+                String res = in.readLine();
+                System.out.println(res);
+            } catch (SocketTimeoutException e) {
+                System.out.println("Time out, no response");
+            }
+            input.close();
+            client.close();
         }
-        input.close();
-        client.close();
-//        // 读取一行键盘输入
-//        String str = input.readLine();
-//        // 第一条命令: /login user_name 或者 /quit
-//        if (str.startsWith("/login ")) {
-//            // 传送给服务端
-//            out.print(str);
-//        } else if (str.equals("/quit")) {
-//            // 关闭键盘输入和客户端Socket
-//            input.close();
-//            client.close();
-//        } else {
-//            System.out.println("Invalid Command");
-//        }
     }
 }

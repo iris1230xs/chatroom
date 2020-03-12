@@ -6,9 +6,9 @@ import java.net.*;
 public class Server {
     public static void main(String[] args) throws IOException {
         ServerSocket server = new ServerSocket(12345);
-        Socket client = server.accept();
-        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        PrintStream out = new PrintStream(client.getOutputStream());
-        out.println("Please login");
+        while (true) {
+            Socket client = server.accept();
+            new Thread(new ServerThread(client)).start();
+        }
     }
 }
